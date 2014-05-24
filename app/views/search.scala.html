@@ -1,0 +1,19 @@
+@(query: String, count: Integer, hits: List[org.dspace.content.Item], view: org.dspace.mxres.MetadataView, page: Integer, hasNext: Boolean, crumbs: List[org.dspace.content.DSpaceObject])
+@import tags._
+@main("Search results")(metatags(null, null)) {
+    @breadcrumbs(crumbs)
+    <div class="jumbotron">
+        <div class="container">
+            <h3>Search for '@query' produced @count results.</h3>
+            @if(page > 0){<a href="/search?query=@query&page=@(page - 1)">Previous Page</a>}
+            @if(hasNext) {<a href="/search?query=@query&page=@(page + 1)">Next Page</a>}
+            <ul>
+                @hits.map { item =>
+                    <li><a href="/handle/@item.getHandle">@item.getName</a>
+                        @item.getMetadata("dc.contributor.author").get(0).getValue
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}

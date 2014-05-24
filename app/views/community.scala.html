@@ -1,0 +1,20 @@
+@(comm: org.dspace.content.Community, view: org.dspace.mxres.MetadataView, crumbs: List[org.dspace.content.DSpaceObject])
+@import tags._
+@main(comm.getName)(metatags(comm, null)) {
+    @breadcrumbs(crumbs)
+    <div class="jumbotron">
+        <div class="container">
+            <h1>@comm.getName</h1>
+            @mdview(comm, view, "list")
+            <h2>Collections and Subcommunities in this community</h2>
+            <ul>
+                @comm.getSubcommunities().map { comm =>
+                    <li><span class="glyphicon glyphicon-user"></span><a href="/handle/@comm.getHandle">  @comm.getName</a></li>
+                }
+                @comm.getCollections().map { coll =>
+                    <li><span class="glyphicon glyphicon-folder-open"></span><a href="/handle/@coll.getHandle">  @coll.getName</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}

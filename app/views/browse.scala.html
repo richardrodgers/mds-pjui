@@ -1,0 +1,15 @@
+@(dso: org.dspace.content.DSpaceObject, info: List[org.dspace.search.HarvestedItemInfo], view: org.dspace.mxres.MetadataView, page: Integer, hasNext: Boolean, crumbs: List[org.dspace.content.DSpaceObject])
+@import tags._
+@main(dso.getName)(metatags(null, null)) {
+    @breadcrumbs(crumbs)
+    <div class="jumbotron">
+        <div class="container">
+            <h1>Browsing @dso.getName</h1>
+            @if(page > 0){<a href="/handle/@dso.getHandle/browse?page=@(page - 1)">Previous Page</a>}
+            @if(hasNext) {<a href="/handle/@dso.getHandle/browse?page=@(page + 1)">Next Page</a>}
+            <ul>
+                @info.map { iinfo => @mdview(iinfo.item, view, "div") }
+            </ul>
+        </div>
+    </div>
+}

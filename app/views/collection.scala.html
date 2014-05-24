@@ -1,0 +1,16 @@
+@(coll: org.dspace.content.Collection, view: org.dspace.mxres.MetadataView, info: List[org.dspace.search.HarvestedItemInfo], iview: org.dspace.mxres.MetadataView, crumbs: List[org.dspace.content.DSpaceObject])
+@import tags._
+@main(coll.getName)(metatags(coll, null)) {
+    @breadcrumbs(crumbs)
+    <div class="jumbotron">
+        <div class="container">
+            <h1>@coll.getName</h1>
+            <a href="/handle/@coll.getHandle/browse"><span class="glyphicon glyphicon-list"></span></a>
+             @mdview(coll, view, "list")
+            <h2>Recent Submissions</h2>
+            <ul>
+                @info.map { iinfo => @mdview(iinfo.item, iview, "div") }
+            </ul>
+        </div>
+    </div>
+}

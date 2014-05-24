@@ -1,0 +1,15 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET     /                                     controllers.Application.index()
+GET     /handle/:prefix/:id                   controllers.Application.handle(prefix: String, id: String, mdv: String ?= null)
+GET     /handle/:prefix/:id/browse            controllers.Application.browse(prefix: String, id: String, page: Integer ?= 0)
+GET     /bitstream/:prefix/:id/:name          controllers.Application.bitstream(prefix: String, id: String, name: String)
+GET     /search                               controllers.Application.search()
+
+# page cache management - used by REST API
+DELETE  /cache                                controllers.Application.decache(handle: String, objtype: Integer, parent: String ?= null)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file                         controllers.Assets.at(path="/public", file)

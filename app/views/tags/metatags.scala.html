@@ -1,0 +1,21 @@
+@(dso: org.dspace.content.DSpaceObject, views: Map[String, org.dspace.mxres.MetadataView])
+@*************************************************************
+ * Tag adds link and meta elements to the page               *
+ * according to the recommendations associated with the view *
+ ************************************************************@
+@if(dso != null && dso.getType == org.dspace.core.Constants.ITEM) {
+  @if(views.contains("dc-html")) {
+    @**********************************************
+     * add tags following DC-HTML recommendations *
+     *********************************************@
+  <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+  <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/">
+  @views.get("dc-html").getViewFields.map { field =>@dso.getMetadata(field.getFieldKey).map { mdvalue =><meta name="@field.getLabel" content="@mdvalue.getValue" @if(field.getRenderType != null) {scheme="@field.getRenderType"}>
+  }}}
+  @if(views.contains("dc-gsch")) {
+    @*****************************************************
+     * add tags following Google Scholar recommendations *
+     *****************************************************@
+  @views.get("dc-gsch").getViewFields.map { field =>@dso.getMetadata(field.getFieldKey).map {mdvalue =><meta name="@field.getLabel" content="@mdvalue.getValue">
+  }}}
+}

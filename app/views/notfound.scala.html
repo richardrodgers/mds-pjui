@@ -1,0 +1,10 @@
+@(message: String)
+@import tags._
+@main("Resource Not Found")(metatags(null, null)) {
+<div class="jumbotron">
+    <div class="container">
+        <h1>We're Sorry!</h1>
+        <p>@message could not be found<p>
+    </div>
+</div>
+}

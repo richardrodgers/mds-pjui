@@ -1,0 +1,51 @@
+@(dso: org.dspace.content.DSpaceObject, mdview: org.dspace.mxres.MetadataView, style: String)
+@style match {
+  case "list" => {
+    @*************************************************
+    * Layout metadata elements in a list with labels *
+    *************************************************@
+    <ul>
+    @mdview.getViewFields.map { field =>
+      @if(field.getRenderType != null && field.getRenderType.startsWith("join")) {
+        <li>@field.getLabel: @dso.getMetadata(field.getFieldKey).map(_.getValue).mkString(";")</li>
+      } else { 
+        @dso.getMetadata(field.getFieldKey).map { mdvalue =>
+            <li>@field.getLabel: @if(field.getRenderType != null && field.getRenderType.equals("link")) {
+                <a href="@mdvalue.getValue">@mdvalue.getValue</a> } else { @mdvalue.getValue }</li> }
+      } }
+    </ul>
+  }
+  case "div" => {
+    @***********************************************************
+    * Layout metadata elements in formatted div without labels *
+    ***********************************************************@
+    <div>
+    @mdview.getViewFields.map { field =>
+      @if(field.getRenderType != null && field.getRenderType.startsWith("join")) {
+        <span>@dso.getMetadata(field.getFieldKey).map(_.getValue).mkString(";")</span>
+      } else { 
+        @dso.getMetadata(field.getFieldKey).map { mdvalue =>
+          @field.getRenderType match {
+            case "link" => {<div><a href="@mdvalue.getValue">@mdvalue.getValue</a></div>}
+            case "objref" => {<div><a href="/handle/@dso.getHandle">@mdvalue.getValue</a></div>}
+            case _  => {<span>@mdvalue.getValue</span>}
+          }
+        }
+      }
+    }
+    </div>
+  }
+ case "table" => {
+    @*************************************************
+    * Other choice now is a table with labels        *
+    * This version adds schema.org (RDFa 1.1) markup *
+    *************************************************@
+    <div vocab="http://schema.org" typeof="@dso.getMetadataValue("dc.type")" resource="http://hdl.handle.net/@dso.getHandle">
+      <table class="table table-striped">
+    @mdview.getViewFields.map { field =>@dso.getMetadata(field.getFieldKey).map { mdvalue =><tr><td>@field.getFieldKey</td><td>@propSpan(field.getAltName,mdvalue.getValue)</td></tr>
+        }}  
+      </table>
+    </div>
+  }
+}
+@propSpan(name: String, value: String) = {@if(name != null && name.length > 0) {<span property="@name">@value<span>} else {@value}}

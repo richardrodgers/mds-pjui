@@ -1,0 +1,26 @@
+@(bs: org.dspace.content.Bitstream, view: org.dspace.mxres.MetadataView, style: String, views: Map[String, org.dspace.mxres.MetadataView], crumbs: List[org.dspace.content.DSpaceObject])
+@import tags._
+@main(bs.getName)(metatags(bs, views)) {
+    @breadcrumbs(crumbs)
+     <div class="jumbotron">
+        <div class="container">
+            <h1>@bs.getName</h1>
+            <div>
+            <span><a href="/bitstream/@bs.getParentObject.getHandle.@bs.getSequenceID/@bs.getName"><span class="glyphicon glyphicon-cloud-download"></span></a></span>
+            <span>@bs.getDescription</span>
+            <span>@scaled(bs.getSize)</span>
+            <span>@bs.getFormatDescription</span>
+            </div>
+        </div>
+    </div>
+}
+@scaled(size: Long) = @{
+    val units: List[String] = java.util.Arrays.asList("bytes", "Kb", "Mb", "Gb", "Pb")
+    var theSize = size
+    var index = 0
+    while (theSize > 1000L) {
+        theSize = theSize / 1000L
+        index = index + 1
+    } 
+    theSize + units.get(index)
+}

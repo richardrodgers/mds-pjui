@@ -1,0 +1,13 @@
+img.logo
+{
+width: 80px;
+height: 64px;
+background-repeat: no-repeat;
+background-image: url('/assets/images/MIT-logo-sprite.png');
+/*background-position: -00px -44px; */
+}
+
+span.bigtext
+{
+    font-size: 30px;
+}

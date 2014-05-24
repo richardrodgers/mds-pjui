@@ -1,0 +1,46 @@
+@(item: org.dspace.content.Item, view: org.dspace.mxres.MetadataView, style: String, views: Map[String, org.dspace.mxres.MetadataView], crumbs: List[org.dspace.content.DSpaceObject])
+@import tags._
+@main(item.getName)(metatags(item, views)) {
+    @breadcrumbs(crumbs)
+    <div class="jumbotron">
+        <div class="container">
+            <h1>@item.getName</h1>
+            @if(style.equals("list")) {
+                <a href="/handle/@item.getHandle?mdv=dc-full" title="Details"><span class="glyphicon glyphicon-plus-sign">
+            } else {
+                <a href="/handle/@item.getHandle"><span class="glyphicon glyphicon-minus-sign" title="Summary">
+            } </span></a>
+            @mdview(item, view, style)
+            <span class="glyphicon glyphicon-file" title="Files"></span>
+            <table class="table">
+                @item.getBundles("ORIGINAL").map { bundle =>
+                    @bundle.getBitstreams.map { bs =>
+                    <tr>
+                        <td><a href="/bitstream/@item.getHandle.@bs.getSequenceID/@bs.getName"><span class="glyphicon glyphicon-cloud-download"></span></a> @bs.getName</td>
+                        <td>@scaled(bs.getSize)</td>
+                        <td>@bs.getFormatDescription</td>
+                        <td>@bs.getDescription</td>
+                        <td><a href="/handle/@item.getHandle.@bs.getSequenceID" title="Details"><span class="glyphicon glyphicon-plus-sign"></span></a>
+                    </tr>
+                    }
+                }
+            </table>
+    <span class="glyphicon glyphicon-briefcase" title="Appears in"></span>
+    <ul>
+        @item.getCollections.map { coll => <li><span class="glyphicon glyphicon-folder-open"></span><a href="/handle/@coll.getHandle"> @coll.getName</a>
+                                               <p>@coll.getMetadata("dsl.short_description").get(0).getValue</p></li> 
+        }
+    </ul>
+        </div>
+    </div>
+}
+@scaled(size: Long) = @{
+    val units: List[String] = java.util.Arrays.asList("bytes", "Kb", "Mb", "Gb", "Pb")
+    var theSize = size
+    var index = 0
+    while (theSize > 1000L) {
+        theSize = theSize / 1000L
+        index = index + 1
+    } 
+    theSize + units.get(index)
+}

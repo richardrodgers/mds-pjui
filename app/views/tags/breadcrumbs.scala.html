@@ -1,0 +1,10 @@
+@(crumbs: List[org.dspace.content.DSpaceObject])
+<ul class="breadcrumb">
+    <li><span class="glyphicon glyphicon-home"></span><a href="/"> Home</a></li>
+    @for(crumb <- crumbs) { <li> @crumb.getType match {
+       case org.dspace.core.Constants.COMMUNITY => {<span class="glyphicon glyphicon-user">}
+       case org.dspace.core.Constants.COLLECTION => {<span class="glyphicon glyphicon-folder-open">}
+       case _ => {<span class="glyphicon glyphicon-book">}
+     } </span><a href="/handle/@crumb.getHandle"> @crumb.getName</a></li>
+    }
+</ul>
